@@ -1,0 +1,183 @@
+
+<div ng-init="init()">
+	<nav>
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo right">
+				<i class="material-icons">camera</i>
+			</a>
+			<ul id="nav-mobile" class="left hide-on-small-and-down">
+				<li><a href="#">
+					<i class="material-icons">home</i>
+				</a></li>
+				<li class="active"><a href="#">Orders</a></li>
+				<li><a href="#">Calendar</a></li>
+				<li><a href="#">Account</a></li>
+			</ul>
+		</div>
+	</nav>
+    <div class="row">
+        <div id="order_page" class="col m12">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs red lighten-5">
+                        <li class="tab col s3">
+                            <a class="active" href="#tab_order_list">
+                                <i class="material-icons align-center">view_list</i>
+                                All Orders
+                            </a>
+                        </li>
+                        <li class="tab col s3">
+                            <a href="#tab_order_new">
+                                <i class="material-icons prefix">add</i>
+                                New Order
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="tab_order_new" class="col s12">
+                    <div class="card-panel">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="cust_name" type="text" class="validate" ng-model="neworder.cust_info.name">
+                                <label for="cust_name">Customer Name</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_info.mobile">
+                                <label for="cust_mobile">Mobile No</label>
+                            </div>
+<!-- 								<div class="input-field col s6">
+                                <input id="cust_address" type="text" class="validate" ng-model="neworder.cust_info.address">
+                                <label for="cust_address">Address</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="cust_city" type="text" class="validate" ng-model="neworder.cust_info.city">
+                                <label for="cust_city">City</label>
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <select id="function_type" ng-model="neworder.func_info.type">
+                                    <option value="" disabled selected>Choose..</option>
+                                    <option ng-repeat="ft in funcTypes" value="{{ft}}">{{ft}}</option>
+                                </select>
+                                <label>Event Type</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="function_date" type="text" class="datepicker" ng-model="neworder.func_info.date">
+                                <label>Event Date</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <textarea id="function_address" class="materialize-textarea" ng-model="neworder.func_info.address"></textarea>
+                                <label for="textarea1">Address</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">₹</i>
+                                <input id="estimated_cost" type="text" class="validate" ng-model="neworder.account_info.estimation">
+                                <label>Estimation</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">₹</i>
+                                <input id="estimated_cost" type="text" ng-model="neworder.account_info.advance">
+                                <label>Advance</label>
+                            </div>
+<!-- 								<div class="input-field col s6 offset-s6">
+                                <i class="material-icons prefix">₹</i>
+                                <input id="estimated_cost" type="text">
+                                <label>Balance</label>
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6 right">
+                                <a class="btn waves-effect waves-light" id="clear_btn" ng-click="resetOrderForm()">
+                                    Cancel
+                                    <i class="material-icons left">thumb_down</i>
+                                </a>
+                                <a class="btn waves-effect waves-light" id="book_btn" ng-click="saveOrder()">
+                                    Order
+                                    <i class="material-icons right">thumb_up</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab_order_list" class="col s12">
+                    <div class="card-panel">
+                        <div class="row">
+                            <div class="col s12 m2">
+                                <label>Order Status :</label>
+                            </div>
+                            <div class="col s6 m2">
+                                    <input type="checkbox" class="filled-in" id="order_status_all" />
+                                    <label for="order_status_all">ALL</label>
+                            </div>
+                            <div class="col s6 m2">
+                                    <input type="checkbox" class="filled-in" id="order_status_open" checked="checked" />
+                                    <label for="order_status_open">OPEN</label>
+                            </div>
+                            <div class="col s6 m2">
+                                    <input type="checkbox" class="filled-in" id="order_status_completed" />
+                                    <label for="order_status_completed">COMPLETED</label>
+                            </div>
+                            <div class="col s6 m2">
+                                    <input type="checkbox" class="filled-in" id="order_status_cancelled" />
+                                    <label for="order_status_cancelled">CANCELLED</label>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="orders.length > 0">
+                            <div class="col s6" ng-repeat="o in orders">
+                                <div class="card green lighten-5">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="corner-badge teal white-text">
+                                                <span>{{o.func_info.type | uppercase}}</span>
+                                            </div>
+                                            <div class="col s12">
+                                                <h5 class="card-title date_title pink-text text-accent-4 right-align">{{o.func_info.date | date : 'fullDate' }}</h5>
+                                            </div>
+                                            <div class="col s6">
+                                                <p class="card-title deep-orange-text text-darken-3">
+                                                    <i class="material-icons prefix tiny grey-text">person</i>
+                                                    {{o.cust_info.name}}
+                                                </p>
+                                                <p class="grey-text text-darken-2">
+                                                    <i class="material-icons prefix tiny">call</i>
+                                                    {{o.cust_info.mobile}}
+                                                </p>
+                                            </div>
+                                            <div class="col s6">
+                                                <p class="blue-text text-darken-4 right-align">Estimation : 
+                                                    <i class="material-icons tiny prefix">₹</i>
+                                                    {{o.account_info.estimation}}
+                                                </p>
+                                                <p class="red-text text-darken-4 right-align">Advance Paid : 
+                                                    <i class="material-icons tiny prefix">₹</i>
+                                                    {{o.account_info.advance}}
+                                                </p>
+                                            </div>
+                                            <div class="col s12">
+                                                <p class="grey-text text-darken-1">
+                                                    <i class="material-icons prefix tiny">location_city</i>
+                                                    {{o.func_info.address}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="orders.length == 0">
+                            <div class="col s12">
+                                <h5 class="center-align grey-text">NO ORDERS AVAILABLE</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

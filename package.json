@@ -1,0 +1,31 @@
+{
+  "name": "studio-manager",
+  "version": "1.0.0",
+  "description": "A application for studio order management",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poomugam/daybook.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poomugam/daybook/issues"
+  },
+  "homepage": "https://github.com/poomugam/daybook#readme",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "~1.13.1",
+    "diskdb": "^0.1.17",
+    "express": "~4.14.x",
+    "lodash": "^4.17.4",
+    "mongoose": "~4.3.x",
+    "multer": "~1.1.0"
+  },
+  "author": "Nirmal Kumar V",
+  "license": "ISC"
+}
