@@ -24,17 +24,15 @@ let UserSchema = new Schema({
 });
 
 let OrderSchema = new Schema({
-    "token":String,
-    "type":String,
-    "date":String,
-	"timestamp":Date,
-	"category":String,
-	"amount":Number,
-    "items":[String],
-	"for":String,
-	"in":String,
-	"by":String,
-	"at":String
+    "cust_name":String,
+    "cust_mobile":String,
+    "cust_address":String,
+    "func_type":String,
+    "func_date":Date,
+    "func_venue":String,
+    "estimation":Number,
+    "advance_paid":Number,
+    "order_status":String
 });
 
 let Order = mongoose.model('Order',OrderSchema);
@@ -71,17 +69,46 @@ function bootstrapApp(){
 
     let router = express.Router();  // get an instance of the express Router
 
+    router.get('/order/customer/list', (req, res) => {
+        Order.find().select('cust_name').exec((err, customers) => {
+            if (err) return console.error(err);
+            let customers_arr = _.chain(customers).map('cust_name').uniq().sort().value();
+            res.json(customers_arr || []);
+        })
+    });
+
     router.get('/order/list', (req, res) => {
+        let order_status = req.query.order_status;
+        let order_date = req.query.order_date;
+        let cust_name = req.query.cust_name;
+        let o_status = [];
+        if(order_status)
+            o_status = _.split(order_status,'-');
 
         let aggs = [];
-        agg_match = {};
+        let agg_match = {};
         agg_match['$match'] =  {};
-        agg_match['$match']['status'] = 'open';
+        if(order_date){
+            let dt = new Date(parseInt(order_date));
+            dt.setUTCHours(0,0,0,0);
+            let dtvalue = dt.getTime();
+            let dayStart = new Date(dtvalue);
+            let dayEnd = new Date(dtvalue);
+            dayEnd.setUTCHours(23,59,59,0);
+            agg_match['$match']['func_date'] = {};
+            agg_match['$match']['func_date']['$lt'] = dayEnd;
+            agg_match['$match']['func_date']['$gte'] = dayStart;
+        }else if(cust_name){
+            agg_match['$match']['cust_name'] =  { "$regex": cust_name, "$options": "i" };
+           
+        }else{
+            agg_match['$match']['order_status'] = { "$in": o_status };
+        }
         aggs.push(agg_match);
 
         agg_sort_date = {
             $sort:{
-                timestamp:-1
+                func_date:1
             }
         };
         aggs.push(agg_sort_date);

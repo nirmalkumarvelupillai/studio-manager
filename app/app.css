@@ -4,6 +4,9 @@ body{
 	background-color:#50565d;
 }
 
+.autocomplete-content.dropdown-content{
+	position:absolute;
+}
 .tab i.material-icons{
 	position:relative;
 	top:6px;
@@ -32,4 +35,13 @@ body{
 .tabs .indicator {
     height: 4px;
     background-color: #ee6e73;
+}
+/*
+.tab_order_list .card {
+	height:250px !important;
+}*/
+.card-action-bar{
+	position:absolute;
+	bottom:5px;
+	right:10px;
 }
