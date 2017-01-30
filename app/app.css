@@ -45,3 +45,43 @@ body{
 	bottom:5px;
 	right:10px;
 }
+.account-estimation,
+.account-advance{
+	position:relative;
+	display: inline-block;
+	padding:3px;
+	border-radius: 3px;
+}
+.card-account-bar{
+	position:absolute;
+	bottom:5px;
+	left:5px;
+}
+
+.font-10{
+	font-size: 10px;
+}
+
+.font-14{
+	font-size: 14px;
+}
+
+.font-18{
+	font-size: 18px;
+}
+
+.font-20{
+	font-size: 20px;
+}
+
+.font-22{
+	font-size: 22px;
+}
+
+.font-24{
+	font-size: 24px;
+}
+
+.font-26{
+	font-size: 26px;
+}

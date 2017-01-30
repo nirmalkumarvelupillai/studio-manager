@@ -88,6 +88,7 @@ angular.module('studio').controller('studioController',
         $http.post(apiurl,orderObj).then(function(response){ 
             showNotificationMessage('success','Order saved successfully');
             $scope.getOrderList();
+            $scope.getCustomerList();
             $scope.resetOrderForm();
         }, function(err){});
 
@@ -103,6 +104,7 @@ angular.module('studio').controller('studioController',
     $scope.deleteOrder = function(order){
         $http.post('/api/order/delete',order).then(function(response){                
             $scope.getOrderList();
+            $scope.getCustomerList();
         }, function(err){});
     }
 

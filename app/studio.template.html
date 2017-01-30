@@ -164,8 +164,8 @@
                                             <div class="col s12">
                                                 <h5 class="card-title date_title pink-text text-accent-4 right-align">{{o.func_date | date : 'fullDate' }}</h5>
                                             </div>
-                                            <div class="col s12 m6">
-                                                <p class="card-title deep-orange-text text-darken-3">
+                                            <div class="col s12">
+                                                <p class="font-22 deep-orange-text text-darken-3">
                                                     <i class="material-icons prefix tiny grey-text">person</i>
                                                     {{o.cust_name}}
                                                 </p>
@@ -174,22 +174,30 @@
                                                     {{o.cust_mobile}}
                                                 </p>
                                             </div>
-                                            <div class="col s12 m6">
-                                                <p class="blue-text text-darken-4 right-align">Estimation : 
-                                                    <i class="material-icons tiny prefix">₹</i>
-                                                    {{o.estimation}}
-                                                </p>
-                                                <p class="red-text text-darken-4 right-align">Advance Paid : 
-                                                    <i class="material-icons tiny prefix">₹</i>
-                                                    {{o.advance_paid}}
-                                                </p>
-                                            </div>
                                             <div class="col s12 m12">
                                                 <p class="grey-text text-darken-1">
                                                     <i class="material-icons prefix tiny">location_city</i>
                                                     {{o.func_venue}}
                                                 </p>
                                             </div>
+                                            <div class="col s12 m12">&nbsp;</div>
+                                            <div class="card-account-bar left-align">
+                                                <div class="account-estimation light-blue darken-2 white-text">
+                                                    <span class="font-10"></p>Estimation</span>
+                                                    <span class="font-14">
+                                                        <i class="material-icons tiny prefix">₹</i>
+                                                        {{o.estimation}}
+                                                    </span>
+                                                </div>
+                                                 <div class="account-advance blue-grey darken-2 yellow-text">
+                                                    <span class="font-10"></p>Advance</span>
+                                                    <span class="font-14">
+                                                        <i class="material-icons tiny prefix">₹</i>
+                                                        {{o.advance_paid}}
+                                                    </span>
+                                                </div>
+                                            </div>
+
                                             <div class="card-action-bar right-align">
                                                 <a ng-if="o.order_status == 'open'" class="waves-effect waves-light btn-floating green" ng-click="updateOrderStatus(o,'completed')">
                                                     <i class="material-icons">done</i>
