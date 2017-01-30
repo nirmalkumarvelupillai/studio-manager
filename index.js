@@ -41,8 +41,8 @@ let User = mongoose.model('User',UserSchema);
 // mongo db connection
 let options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };       
-let mongodbUri = 'mongodb://localhost:27017/NSAMPLE';
-// let mongodbUri = ';
+// let mongodbUri = 'mongodb://localhost:27017/NSAMPLE';
+let mongodbUri = 'mongodb://heroku_0j37gz6c:g4304s73j9m2ana1epdh83o06i@ds137759.mlab.com:37759/heroku_0j37gz6c';
 
 mongoose.connect(mongodbUri, options);
 let conn = mongoose.connection;             
