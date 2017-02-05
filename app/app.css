@@ -4,6 +4,9 @@ body{
 	background-color:#50565d;
 }
 
+.horizontal-list li{
+	display: inline-block;
+}
 .autocomplete-content.dropdown-content{
 	position:absolute;
 }
@@ -36,10 +39,7 @@ body{
     height: 4px;
     background-color: #ee6e73;
 }
-/*
-.tab_order_list .card {
-	height:250px !important;
-}*/
+
 .card-action-bar{
 	position:absolute;
 	bottom:5px;
@@ -56,6 +56,12 @@ body{
 	position:absolute;
 	bottom:5px;
 	left:5px;
+}
+
+.page-no{
+	margin-right: 5px;
+	margin-top:10px;
+	margin-bottom: 5px;
 }
 
 .font-10{

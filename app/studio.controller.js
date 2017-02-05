@@ -1,172 +1,204 @@
-angular.module('studio').controller('studioController',
-                                    ['$scope','$http','$filter','$stateParams','$timeout',
-                                    function($scope,$http,$filter,$stateParams, $timeout){
+(function(){
 
-    $scope.funcTypes = [
-        "General",
-        "Wedding",
-        "School",
-        "Photo Shoot",
-        "Other"
-    ];
-    $scope.orders = [];
+    angular.module('studio').controller('studioController',studioController);
+    studioController.$inject = ['$scope','$http','$filter','$stateParams','$timeout','toastr'];
 
-    $scope.order_status_selection = [];
-    $scope.orderStatusSelectionChange = function(selected,title){
-        if(selected){
-            if(title=='all'){
-                $scope.order_status_selection = ['open','completed','cancelled'];
-            }else{
-                $scope.order_status_selection.push(title);
-            }
-        }else{
-            if(title=='all'){
-                $scope.order_status_selection = [];
-            }else{
-                $scope.filter_order_status_all = false;
-                var arr_index = $scope.order_status_selection.indexOf(title);
-                $scope.order_status_selection.splice( arr_index, 1 );
-            }
-        }
-        $scope.getOrderList();
+    function studioController($scope,$http,$filter,$stateParams, $timeout,toastr){
+        $scope.new_order_open = true;
+        $scope.funcTypes = [
+            "General",
+            "Wedding",
+            "School",
+            "Photo Shoot",
+            "Other"
+        ];
+        $scope.orders = [];
+        $scope.activepg =2;
+        $scope.order_status_selection = [];
+        $scope.order_filter = {};
+        $scope.order_filter_list = ['Order Status', 'Date', 'Customer'];
+        $scope.order_filter.type = "Order Status";
 
-        if(title == 'all'){
-            $scope.filter_order_status_open = selected;
-            $scope.filter_order_status_completed = selected;
-            $scope.filter_order_status_cancelled = selected;
-        }
-    }
+        $scope.init = init;
+        $scope.orderStatusSelectionChange = orderStatusSelectionChange;
+        $scope.resetOrderForm = resetOrderForm;
+        $scope.saveOrder = saveOrder;
+        $scope.updateOrderStatus = updateOrderStatus;
+        $scope.deleteOrder = deleteOrder;
+        $scope.getOrderList = getOrderList;
+        $scope.getCustomerList = getCustomerList;
+        $scope.onOrderFilterChange = onOrderFilterChange;
+        $scope.searchOrder = searchOrder;
+        $scope.onFunctionDateChange = onFunctionDateChange;
+        $scope.onFilterDateChange = onFilterDateChange;
+        $scope.onPageChange = onPageChange;
+        // Functions
 
-    $scope.resetOrderForm = function(){
-        $scope.neworder = {
-            cust_name:'',
-            cust_mobile:'',
-            cust_address:'',
-            func_type:'',
-            func_date:'',
-            func_venue:'',
-            estimation:'',
-            advance_paid:'',
-            order_status:'open'
-        };
-        $timeout(function(){
-            $('#function_type').material_select('destroy');
-            $('#function_type').material_select();
-        },100);
-    }
-    $scope.init = function(){
-        $scope.resetOrderForm();
-        $timeout(function(){
-            //Jquery calls
-            $('.datepicker').pickadate({
-                selectMonths: true, // Creates a dropdown to control month
-                selectYears: 15 // Creates a dropdown of 15 years to control year
-            });
-            $('ul.tabs').tabs();
-
-            $('#filter_type').material_select();
-            //Jquery Calls	
-        },100);
-        $scope.filter_order_status_open = true;
-        $scope.order_status_selection.push('open');
-        $scope.order_filter_type = 'Order Status';
-
-        $scope.getOrderList();
-        $scope.getCustomerList();
-    }
-    
-    $scope.saveOrder = function(){
-        $scope.neworder.func_date = new Date($scope.neworder.func_date).getTime();
-        if($scope.sameas_cust_address){
-            $scope.neworder.func_venue = $scope.neworder.cust_address;
-        }
-        var orderObj = angular.copy($scope.neworder);
-        var apiurl = '/api/order/add';
-        if(orderObj._id){
-            apiurl = '/api/order/update';
-        }
-        $http.post(apiurl,orderObj).then(function(response){ 
-            showNotificationMessage('success','Order saved successfully');
-            $scope.getOrderList();
-            $scope.getCustomerList();
+        function init(){
             $scope.resetOrderForm();
-        }, function(err){});
+            $scope.filter_order_status_open = true;
+            $scope.order_status_selection.push('open');
+            $scope.order_filter_type = 'Order Status';
 
-    }
-
-    $scope.updateOrderStatus = function(order,status){
-        order.order_status = status;
-        $http.post('/api/order/update',order).then(function(response){                
-            $scope.getOrderList();
-        }, function(err){});
-    }
-
-    $scope.deleteOrder = function(order){
-        $http.post('/api/order/delete',order).then(function(response){                
             $scope.getOrderList();
             $scope.getCustomerList();
-        }, function(err){});
-    }
+        }
 
-    $scope.getOrderList = function(){
-        var order_status = $scope.order_status_selection.join('-');
-
-        $http.get('/api/order/list?order_status='+order_status).then(function(response){
-            if(response.data){
-                $scope.orders = response.data.payload.orders;
+        function orderStatusSelectionChange(selected,title){
+            if(selected){
+                if(title=='all'){
+                    $scope.order_status_selection = ['open','completed','cancelled'];
+                }else{
+                    $scope.order_status_selection.push(title);
+                }
             }else{
-                $scope.orders = [];
+                if(title=='all'){
+                    $scope.order_status_selection = [];
+                }else{
+                    $scope.filter_order_status_all = false;
+                    var arr_index = $scope.order_status_selection.indexOf(title);
+                    $scope.order_status_selection.splice( arr_index, 1 );
+                }
             }
-        }, function(err){});
-    }
-
-    $scope.getCustomerList = function(){
-
-        $http.get('/api/order/customer/list').then(function(response){
-            var cust_list = {};
-            if(response.data){
-                angular.forEach(response.data, function(value, key) {
-                    this[value] = null;
-                }, cust_list);
-            }
-            $('#order_filter_customer').siblings().remove();
-            $('#order_filter_customer').autocomplete({
-                data: cust_list
-            });
-        }, function(err){});
-
-
-    }
-
-    $scope.onOrderFilterChange = function(){
-        if($scope.order_filter_type == 'Order Status'){
             $scope.getOrderList();
-        }else{
-            $scope.searchOrder($scope.order_filter_type.toLowerCase())
-        }
-    }
 
-    $scope.searchOrder = function(orderby){
-        var apiUrl = "";
-        if(orderby == 'date'){
-            apiUrl = '/api/order/list?order_date='+(new Date($scope.order_filter_date)).getTime();
-        }else if(orderby == 'customer'){
-            apiUrl = '/api/order/list?cust_name='+$scope.order_filter_customer;
-        }
-        $http.get(apiUrl).then(function(response){
-            if(response.data){
-                $scope.orders = response.data.payload.orders;
-            }else{
-                $scope.orders = [];
+            if(title == 'all'){
+                $scope.filter_order_status_open = selected;
+                $scope.filter_order_status_completed = selected;
+                $scope.filter_order_status_cancelled = selected;
             }
-        }, function(err){});
+        };
 
-    }
-    
-}]);
+        function onPageChange(pageno){
+            console.log(pageno);
 
+        }
 
-function showNotificationMessage(type,message,title){
-    title = title || "";       
-    toastr[type](message,title);
-}
+        function resetOrderForm(){
+            $scope.neworder = {
+                cust_name:'',
+                cust_mobile:'',
+                cust_address:'',
+                func_type:'',
+                func_date:undefined,
+                func_venue:'',
+                estimation:'',
+                advance_paid:'',
+                order_status:'open'
+            };
+            $scope.sameas_cust_address = false;
+        }
+
+   
+        function saveOrder(){
+            console.log($scope.neworder);
+            if($scope.neworder.cust_name && $scope.neworder.func_type && $scope.neworder.func_date){
+                if($scope.sameas_cust_address || !$scope.neworder.func_venue || $scope.neworder.func_venue == ''){
+                    $scope.neworder.func_venue = $scope.neworder.cust_address;
+                }
+                $scope.neworder.estimation = $scope.neworder.estimation || 0;
+                $scope.neworder.advance_paid = $scope.neworder.advance_paid || 0;
+                var orderObj = angular.copy($scope.neworder);
+                orderObj.func_date = new Date(orderObj.func_date).getTime();
+                
+                var apiurl = '/api/order/add';
+                if(orderObj._id){
+                    apiurl = '/api/order/update';
+                }
+                $http.post(apiurl,orderObj).then(function(response){ 
+                    toastr.success('Order saved successfully');
+                    $scope.getOrderList();
+                    $scope.getCustomerList();
+                    $scope.resetOrderForm();
+                }, function(err){});
+            }else{
+                toastr.warning('Please fill order details!','Warning');
+            }
+        }
+
+        function updateOrderStatus(order,status){
+            order.order_status = status;
+            $http.post('/api/order/update',order).then(function(response){                
+                $scope.getOrderList();
+                toastr.info('Order updated successfully.','Information');
+            }, function(err){});
+        }
+
+        function deleteOrder(order){
+            $http.post('/api/order/delete',order).then(function(response){                
+                $scope.getOrderList();
+                $scope.getCustomerList();
+                toastr.info('Order deleted successfully.','Information');
+            }, function(err){});
+        }
+
+        function getOrderList(){
+            var order_status = $scope.order_status_selection.join('-');
+
+            $http.get('/api/order/list?order_status='+order_status).then(function(response){
+                if(response.data){
+                    $scope.orders = response.data.payload.orders;
+                }else{
+                    $scope.orders = [];
+                }
+            }, function(err){});
+        }
+
+        function getCustomerList(){
+            $http.get('/api/order/customer/list').then(function(response){
+                var cust_list = {};
+                if(response.data){
+                    angular.forEach(response.data, function(value, key) {
+                        this[value] = null;
+                    }, cust_list);
+                }
+                $('#order_filter_customer').siblings('ul.autocomplete-content').remove();
+                $('#order_filter_customer').autocomplete({
+                    data: cust_list,
+                    limit:20
+                });
+            }, function(err){});
+        }
+
+        function onOrderFilterChange(){
+            if($scope.order_filter.type == 'Order Status'){
+                $scope.getOrderList();
+            }else{
+                $scope.searchOrder($scope.order_filter.type.toLowerCase())
+            }
+        }
+
+        function searchOrder(orderby){
+            var apiUrl = "";
+            if(orderby == 'date'){
+                apiUrl = '/api/order/list?order_date='+(new Date($scope.order_filter_date)).getTime();
+            }else if(orderby == 'customer'){
+                apiUrl = '/api/order/list?cust_name='+$scope.order_filter_customer;
+            }
+            $http.get(apiUrl).then(function(response){
+                if(response.data){
+                    $scope.orders = response.data.payload.orders;
+                }else{
+                    $scope.orders = [];
+                }
+            }, function(err){});
+
+        }
+
+        function onFunctionDateChange(){
+            var datePicker = $('#function_date').pickadate('picker');
+            if(datePicker && datePicker.component.item.select && datePicker.component.item.highlight.pick == datePicker.component.item.select.pick) {
+                datePicker.close();
+                $('#sameas_cust_address').focus();
+            }
+        }
+
+        function onFilterDateChange(){
+            var datePicker = $('#order_filter_date').pickadate('picker');
+            if(datePicker && datePicker.component.item.select && datePicker.component.item.highlight.pick == datePicker.component.item.select.pick) {
+                datePicker.close();
+                $('#filter_type').focus();
+            }
+        }
+    };
+})();

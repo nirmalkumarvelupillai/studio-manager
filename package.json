@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/poomugam/daybook.git"
   },
-  "author": "",
+  "author": "Nirmal Kumar V",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/poomugam/daybook/issues"
@@ -18,14 +18,21 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "angular": "^1.6.1",
+    "angular-animate": "^1.6.1",
+    "angular-materialize": "^0.2.2",
+    "angular-toastr": "^2.1.1",
+    "angular-ui-router": "^0.4.2",
     "async": "^2.1.4",
     "body-parser": "~1.13.1",
     "diskdb": "^0.1.17",
     "express": "~4.14.x",
     "lodash": "^4.17.4",
+    "materialize-css": "^0.98.0",
     "mongoose": "~4.3.x",
     "multer": "~1.1.0"
   },
-  "author": "Nirmal Kumar V",
-  "license": "ISC"
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
 }

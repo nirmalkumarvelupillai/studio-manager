@@ -10,217 +10,251 @@
 					<i class="material-icons">home</i>
 				</a></li>
 				<li class="active"><a href="#">Orders</a></li>
-				<!--<li><a href="#">Calendar</a></li>
-				<li><a href="#">Account</a></li>-->
+				<li><a href="#">Account</a></li>
+				<li><a href="#">Reports</a></li>
 			</ul>
 		</div>
 	</nav>
     <div class="row">
         <div id="order_page" class="col m12">
-            <div class="row"></div>
+            <div class="row">
                 <div class="col s12">
-                    <ul class="tabs red lighten-5">
-                        <li class="tab col s3">
-                            <a class="active" href="#tab_order_list">
-                                <i class="material-icons align-center">view_list</i>
-                                All Orders
-                            </a>
-                        </li>
-                        <li class="tab col s3">
-                            <a href="#tab_order_new">
-                                <i class="material-icons prefix">add</i>
-                                New Order
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="tab_order_new" class="col s12">
                     <div class="card-panel">
                         <div class="row">
-                            <div class="input-field col s6">
-                                <input id="cust_name" type="text" class="validate" ng-model="neworder.cust_name">
-                                <label for="cust_name">Customer Name</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
-                                <label for="cust_mobile">Mobile No</label>
-                            </div>
-    						<div class="input-field col s12">
-                                <textarea id="function_address" class="materialize-textarea" ng-model="neworder.cust_address"></textarea>
-                                <label for="textarea1">Address</label>
-                            </div>
+                            <ul class="horizontal-list right-align">
+                                <li ng-hide="new_order_open">
+                                    <a class="btn-floating green darken-1" ng-click="new_order_open=true">
+                                        <i class="material-icons">add</i>
+                                    </a>
+                                </li>
+                                <li ng-show="new_order_open">
+                                    <a class="btn-floating blue-grey darken-2" ng-click="new_order_open=false">
+                                        <i class="material-icons">list</i>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <select id="function_type" ng-model="neworder.func_type">
-                                    <option value="" disabled selected>Choose..</option>
-                                    <option ng-repeat="ft in funcTypes" value="{{ft}}">{{ft}}</option>
-                                </select>
-                                <label>Event Type</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <input id="function_date" type="text" class="datepicker" ng-model="neworder.func_date">
-                                <label>Event Date</label>
-                            </div>
-                            <div class="input-field col s12">
-                                <input type="checkbox" class="filled-in" id="sameas_cust_address" ng-model="sameas_cust_address"/>
-                                <label for="sameas_cust_address">Venue Same as Customer Address</label>
-                            </div>
-                           <div class="input-field col s12">&nbsp;</div>
-                            <div class="input-field col s12" ng-if="!sameas_cust_address">
-                                <textarea id="function_address" class="materialize-textarea" ng-model="neworder.func_venue"></textarea>
-                                <label for="textarea1">Venue</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <i class="material-icons prefix">₹</i>
-                                <input id="estimated_cost" type="text" class="validate" ng-model="neworder.estimation">
-                                <label>Estimation</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <i class="material-icons prefix">₹</i>
-                                <input id="estimated_cost" type="text" ng-model="neworder.advance_paid">
-                                <label>Advance</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s6 right">
-                                <a class="btn waves-effect waves-light" id="clear_btn" ng-click="resetOrderForm()">
-                                    Cancel
-                                    <i class="material-icons left">thumb_down</i>
-                                </a>
-                                <a class="btn waves-effect waves-light" id="book_btn" ng-click="saveOrder()">
-                                    Order
-                                    <i class="material-icons right">thumb_up</i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab_order_list" class="tab_order_list col s12">
-                    <div class="card-panel">
-                        <div class="col s12 z-depth-3 brown lighten-5">
-                            <div class="row">
-                                <div class="input-field col s12 m3">
-                                    <select id="filter_type" ng-model="order_filter_type" ng-change="onOrderFilterChange()">
-                                        <option ng-repeat="fst in ['Order Status', 'Date', 'Customer']" value="{{fst}}">{{fst}}</option>
-                                    </select>
-                                    <label for="filter_type">Filter By</label>
-                                </div>
-                                <div class="col s12 m9" ng-show="order_filter_type == 'Order Status'">
-                                    <div class="input-field col s6 m3">
-                                        <input type="checkbox" class="filled-in" id="order_status_all" name="all" ng-model="filter_order_status_all" ng-change="orderStatusSelectionChange(filter_order_status_all,'all')"/>
-                                        <label for="order_status_all">ALL</label>
+                        <div id="tab_order_new" ng-class="{'scale-in':new_order_open,'scale-out':!new_order_open}" class="row scale-transition" ng-show="new_order_open">
+                            <div ng-form name="order_form">
+                                <div class="row">
+                                    <div input-field class="col s12 m6">
+                                        <input name="cust_name" id="cust_name" type="text" class="validate" ng-model="neworder.cust_name" required>
+                                        <label for="cust_name" data-error="Missing">Customer Name</label>
                                     </div>
-                                    <div class="input-field col s6 m3">
-                                        <input type="checkbox" class="filled-in" id="order_status_open" name="open" ng-model="filter_order_status_open" ng-change="orderStatusSelectionChange(filter_order_status_open,'open')"/>
-                                        <label for="order_status_open">OPEN</label>
+                                    <div input-field class="col s12 m6">
+                                        <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
+                                        <label for="cust_mobile">Mobile No</label>
                                     </div>
-                                    <div class="input-field col s6 m3">
-                                        <input type="checkbox" class="filled-in" id="order_status_completed" name="completed" ng-model="filter_order_status_completed" ng-change="orderStatusSelectionChange(filter_order_status_completed,'completed')"/>
-                                        <label for="order_status_completed">COMPLETED</label>
-                                    </div>
-                                    <div class="input-field col s6 m3">
-                                        <input type="checkbox" class="filled-in" id="order_status_cancelled" name="cancelled" ng-model="filter_order_status_cancelled" ng-change="orderStatusSelectionChange(filter_order_status_cancelled,'cancelled')"/>
-                                        <label for="order_status_cancelled">CANCELLED</label>
+                                    <div input-field class="col s12">
+                                        <textarea id="function_address" class="materialize-textarea" ng-model="neworder.cust_address"></textarea>
+                                        <label for="textarea1">Address</label>
                                     </div>
                                 </div>
-                                <div class="col s12 m9" ng-show="order_filter_type == 'Date'">
-                                    <div class="input-field col s10 m8">
-                                        <i class="material-icons prefix">schedule</i>
-                                        <input id="order_filter_date" type="text" class="datepicker" ng-model="order_filter_date">
-                                        <label for="order_filter_date">Select Date</label>
-                                    </div>                                
-                                    <div class="input-field col s2 m4">
-                                        <a class="waves-effect waves-light btn-floating blue lighten-2" ng-click="searchOrder('date')">
-                                            <i class="material-icons white-text">search</i>
+                                <div class="row">
+                                    <div input-field class="col s12 m6">
+                                        <select id="function_type" ng-model="neworder.func_type" material-select watch>
+                                            <option value="" disabled selected>Choose..</option>
+                                            <option ng-repeat="ft in funcTypes" value="{{ft}}">{{ft}}</option>
+                                        </select>
+                                        <label>Event Type</label>
+                                    </div>
+                                    <div input-field class="col s12 m6">
+                                        <input input-date id="function_date" type="text" class="datepicker" 
+                                                ng-model="neworder.func_date" 
+                                                container="#container" 
+                                                close="'Close'" 
+                                                select-years="15" 
+                                                on-set="onFunctionDateChange()"
+                                                 />
+                                        <label>Event Date</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input type="checkbox" class="filled-in" id="sameas_cust_address" ng-model="sameas_cust_address"/>
+                                        <label for="sameas_cust_address">Venue Same as Customer Address</label>
+                                    </div>
+                                    <div input-field class="col s12">&nbsp;</div>
+                                    <div input-field class="col s12" ng-if="!sameas_cust_address">
+                                        <textarea id="function_address" class="materialize-textarea" ng-model="neworder.func_venue"></textarea>
+                                        <label for="textarea1">Venue</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div input-field class="col s12 m6">
+                                        <i class="material-icons prefix">₹</i>
+                                        <input id="estimated_cost" type="number" class="validate" ng-model="neworder.estimation">
+                                        <label>Estimation</label>
+                                    </div>
+                                    <div input-field class="col s12 m6">
+                                        <i class="material-icons prefix">₹</i>
+                                        <input id="estimated_cost" type="number" ng-model="neworder.advance_paid">
+                                        <label>Advance</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div input-field class="col s6 m3 right">
+                                        <a class="btn waves-effect waves-light" id="book_btn" ng-click="saveOrder()">
+                                            Order
+                                            <i class="material-icons right">thumb_up</i>
+                                        </a>
+                                    </div>                            
+                                    <div input-field class="col s6 m3 right">
+                                        <a class="btn waves-effect waves-light" id="clear_btn" ng-click="resetOrderForm()">
+                                            Cancel
+                                            <i class="material-icons left">thumb_down</i>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col s12 m9" ng-show="order_filter_type == 'Customer'">
-                                    <div class="input-field col s10 m8">
-                                        <i class="material-icons prefix">person</i>
-                                        <input id="order_filter_customer" type="text" class="validate autocomplete" ng-model="order_filter_customer">
-                                    </div>
-                                    <div class="input-field col s2 m4">
-                                        <a class="waves-effect waves-light btn-floating blue lighten-2" ng-click="searchOrder('customer')">
-                                            <i class="material-icons white-text">search</i>
-                                        </a>
-                                    </div>
-
-                                </div>
                             </div>
-                            
-                        </div>
-                        <div class="row" ng-show="orders.length > 0">
-                            <div class="col s6" ng-repeat="o in orders">
-                                <div ng-class="{'green':o.order_status == 'open','blue-grey':o.order_status == 'completed','red':o.order_status == 'cancelled'}" class="card lighten-5">
-                                    <div class="card-content">
-                                        <div class="row">
-                                            <div class="corner-badge teal white-text">
-                                                <span>{{o.func_type | uppercase}}</span>
-                                            </div>
-                                            <div class="col s12">
-                                                <h5 class="card-title date_title pink-text text-accent-4 right-align">{{o.func_date | date : 'fullDate' }}</h5>
-                                            </div>
-                                            <div class="col s12">
-                                                <p class="font-22 deep-orange-text text-darken-3">
-                                                    <i class="material-icons prefix tiny grey-text">person</i>
-                                                    {{o.cust_name}}
-                                                </p>
-                                                <p class="grey-text text-darken-2">
-                                                    <i class="material-icons prefix tiny">call</i>
-                                                    {{o.cust_mobile}}
-                                                </p>
-                                            </div>
-                                            <div class="col s12 m12">
-                                                <p class="grey-text text-darken-1">
-                                                    <i class="material-icons prefix tiny">location_city</i>
-                                                    {{o.func_venue}}
-                                                </p>
-                                            </div>
-                                            <div class="col s12 m12">&nbsp;</div>
-                                            <div class="card-account-bar left-align">
-                                                <div class="account-estimation light-blue darken-2 white-text">
-                                                    <span class="font-10"></p>Estimation</span>
-                                                    <span class="font-14">
-                                                        <i class="material-icons tiny prefix">₹</i>
-                                                        {{o.estimation}}
-                                                    </span>
-                                                </div>
-                                                 <div class="account-advance blue-grey darken-2 yellow-text">
-                                                    <span class="font-10"></p>Advance</span>
-                                                    <span class="font-14">
-                                                        <i class="material-icons tiny prefix">₹</i>
-                                                        {{o.advance_paid}}
-                                                    </span>
-                                                </div>
-                                            </div>
 
-                                            <div class="card-action-bar right-align">
-                                                <a ng-if="o.order_status == 'open'" class="waves-effect waves-light btn-floating green" ng-click="updateOrderStatus(o,'completed')">
-                                                    <i class="material-icons">done</i>
-                                                </a>
-                                                <a ng-if="o.order_status == 'open'" class="waves-effect waves-light btn-floating red" ng-click="updateOrderStatus(o,'cancelled')">
-                                                    <i class="material-icons">cancel</i>
-                                                </a>
-                                                <a class="waves-effect waves-light btn-floating grey darken-2" ng-click="deleteOrder(o)">
-                                                    <i class="material-icons white-text">delete</i>
-                                                </a>
-                                            </div>
+                        </div>
+
+                        <div id="tab_order_list" ng-class="{'scale-in':!new_order_open,'scale-out':new_order_open}"  class="row scale-transition" ng-hide="new_order_open">
+                            <div class="col s12">
+                                <div class="row">
+                                    <div input-field class="col s12 m3">
+                                        <select id="filter_type" ng-model="order_filter.type" ng-change="onOrderFilterChange()" material-select watch>
+                                            <option ng-repeat="fst in order_filter_list" >{{fst}}</option>
+                                        </select>
+                                        <label for="filter_type">Filter By</label>
+                                    </div>
+                                    <div class="col s12 m9" ng-show="order_filter.type == 'Order Status'">
+                                        <div input-field class="col s6 m3">
+                                            <input type="checkbox" class="filled-in" id="order_status_all" name="all" ng-model="filter_order_status_all" ng-change="orderStatusSelectionChange(filter_order_status_all,'all')"/>
+                                            <label for="order_status_all">ALL</label>
+                                        </div>
+                                        <div input-field class="col s6 m3">
+                                            <input type="checkbox" class="filled-in" id="order_status_open" name="open" ng-model="filter_order_status_open" ng-change="orderStatusSelectionChange(filter_order_status_open,'open')"/>
+                                            <label for="order_status_open">OPEN</label>
+                                        </div>
+                                        <div input-field class="col s6 m3">
+                                            <input type="checkbox" class="filled-in" id="order_status_completed" name="completed" ng-model="filter_order_status_completed" ng-change="orderStatusSelectionChange(filter_order_status_completed,'completed')"/>
+                                            <label for="order_status_completed">COMPLETED</label>
+                                        </div>
+                                        <div input-field class="col s6 m3">
+                                            <input type="checkbox" class="filled-in" id="order_status_cancelled" name="cancelled" ng-model="filter_order_status_cancelled" ng-change="orderStatusSelectionChange(filter_order_status_cancelled,'cancelled')"/>
+                                            <label for="order_status_cancelled">CANCELLED</label>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m9" ng-show="order_filter.type == 'Date'">
+                                        <div input-field class="col s10 m8">
+                                            <input input-date id="order_filter_date" type="text" class="datepicker" 
+                                                ng-model="order_filter.date" 
+                                                container="#container" 
+                                                close="'Close'" 
+                                                select-years="15" 
+                                                on-set="onFilterDateChange()" 
+                                                >
+                                            <label for="order_filter_date">Select Date</label>
+                                        </div>                                
+                                        <div input-field class="col s2 m4">
+                                            <a class="waves-effect waves-light btn-floating blue lighten-2" ng-click="searchOrder('date')">
+                                                <i class="material-icons white-text">search</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m9" ng-show="order_filter.type == 'Customer'">
+                                        <div input-field class="col s10 m8">
+                                            <input id="order_filter_customer" type="text" class="autocomplete" ng-model="order_filter.customer">
+                                            <label for="order_filter_customer">Customer Name</label>
+                                        </div>
+                                        <div input-field class="col s2 m4">
+                                            <a class="waves-effect waves-light btn-floating blue lighten-2" ng-click="searchOrder('customer')">
+                                                <i class="material-icons white-text">search</i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row" ng-show="orders.length == 0">
                             <div class="col s12">
-                                <h5 class="center-align grey-text">NO ORDERS AVAILABLE</h5>
+                                <div class="row" ng-show="orders.length > 0">
+                                    <div class="col s12 m6" ng-repeat="o in orders">
+                                        <div ng-class="{'green':o.order_status == 'open','blue-grey':o.order_status == 'completed','red':o.order_status == 'cancelled'}" class="card lighten-5">
+                                            <div class="card-content">
+                                                <div class="row">
+                                                    <div class="corner-badge blue-grey darken-3 grey-text text-lighten-2">
+                                                        <span>{{o.func_type | uppercase}}</span>
+                                                    </div>
+                                                    <div class="col s12">
+                                                        <h5 class="card-title date_title pink-text text-accent-4 right-align">{{o.func_date | date : 'fullDate' }}</h5>
+                                                    </div>
+                                                    <div class="col s12">
+                                                        <p class="font-22 deep-orange-text text-darken-3">
+                                                            <i class="material-icons prefix tiny grey-text">person</i>
+                                                            {{o.cust_name}}
+                                                        </p>
+                                                        <p class="grey-text text-darken-2">
+                                                            <i class="material-icons prefix tiny">call</i>
+                                                            {{o.cust_mobile}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col s12 m12">
+                                                        <p class="grey-text text-darken-1">
+                                                            <i class="material-icons prefix tiny">location_city</i>
+                                                            {{o.func_venue}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col s12 m12">&nbsp;</div>
+                                                    <div class="card-account-bar left-align">
+                                                        <div class="account-estimation light-blue darken-2 white-text">
+                                                            <span class="font-10">Estimation</span>
+                                                            <span class="font-14">
+                                                                <i class="material-icons tiny prefix">₹</i>
+                                                                {{o.estimation}}
+                                                            </span>
+                                                        </div>
+                                                        <div class="account-advance blue-grey darken-2 lime-text text-accent-3">
+                                                            <span class="font-10">Advance</span>
+                                                            <span class="font-14">
+                                                                <i class="material-icons tiny prefix">₹</i>
+                                                                {{o.advance_paid}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-action-bar right-align">
+                                                        <a ng-if="o.order_status == 'open'" class="hide-on-small-only waves-effect waves-light btn-floating green" ng-click="updateOrderStatus(o,'completed')">
+                                                            <i class="material-icons">done</i>
+                                                        </a>
+                                                        <a ng-if="o.order_status == 'open'" class="hide-on-small-only waves-effect waves-light btn-floating red" ng-click="updateOrderStatus(o,'cancelled')">
+                                                            <i class="material-icons">cancel</i>
+                                                        </a>
+                                                        <a class="waves-effect waves-light btn-floating grey darken-2" ng-click="deleteOrder(o)">
+                                                            <i class="material-icons white-text">delete</i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col s12">
+                                        <div class="col s6 left-align">
+                                            <a class="page-no waves-effect waves-light btn-floating blue-grey">
+                                                <i class="material-icons">chevron_left</i>
+                                            </a>
+                                        </div>
+                                        <div class="col s6 right-align">
+                                            <a class="page-no waves-effect waves-light btn-floating blue-grey">
+                                                <i class="material-icons">chevron_right</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row" ng-show="orders.length == 0">
+                                    <div class="col s12">
+                                        <h5 class="center-align grey-text">NO ORDERS AVAILABLE</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row center-align">
+                                    <div class="col s12">
+                                        
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>

@@ -1,14 +1,23 @@
-angular.module('studio',['ui.router'])
+(function(){
+  angular.module('studio',[
+                            'ui.materialize',
+                            'ngAnimate',
+                            'toastr',
+                            'ui.router'
+                          ]);
 
-.config(function($stateProvider,$urlRouterProvider) {
-  var studioState = {
-    name: 'studio',
-    url: '/',
-    templateUrl: '/app/studio.template.html',
-    controller:'studioController'
-  }
+  angular.module('studio').config(function($stateProvider,$urlRouterProvider) {
+    
+    var studioState = {
+      name: 'studio',
+      url: '/',
+      templateUrl: '/app/studio.template.html',
+      controller:'studioController'
+    }
 
-  $stateProvider.state(studioState);
-  $urlRouterProvider.otherwise('/');
+    $stateProvider.state(studioState);
+    $urlRouterProvider.otherwise('/');
 
-});
+  });
+
+})();
