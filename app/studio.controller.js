@@ -18,10 +18,13 @@
         $scope.order_filter = {};
         $scope.order_filter_list = ['Order Status', 'Date', 'Customer'];
         $scope.order_filter.type = "Order Status";
+        $scope.order_payment = {};
+
 
         $scope.init = init;
         $scope.orderStatusSelectionChange = orderStatusSelectionChange;
         $scope.resetOrderForm = resetOrderForm;
+        $scope.addOrderPayment = addOrderPayment;
         $scope.saveOrder = saveOrder;
         $scope.updateOrderStatus = updateOrderStatus;
         $scope.deleteOrder = deleteOrder;
@@ -31,6 +34,7 @@
         $scope.searchOrder = searchOrder;
         $scope.onFunctionDateChange = onFunctionDateChange;
         $scope.onFilterDateChange = onFilterDateChange;
+        $scope.onOrderPaymentDateChange = onOrderPaymentDateChange;
         $scope.onPageChange = onPageChange;
         // Functions
 
@@ -84,12 +88,19 @@
                 func_venue:'',
                 estimation:'',
                 advance_paid:'',
+                payments:[],
                 order_status:'open'
             };
             $scope.sameas_cust_address = false;
         }
 
-   
+        function addOrderPayment(){
+            if($scope.order_payment && $scope.order_payment.date && $scope.order_payment.amount){
+                $scope.neworder.payments.push($scope.order_payment);
+                $scope.order_payment = {};
+            }
+        }
+
         function saveOrder(){
             console.log($scope.neworder);
             if($scope.neworder.cust_name && $scope.neworder.func_type && $scope.neworder.func_date){
@@ -199,6 +210,14 @@
                 datePicker.close();
                 $('#filter_type').focus();
             }
+        }
+
+        function onOrderPaymentDateChange(){
+            var datePicker = $('#order_payment_date').pickadate('picker');
+            if(datePicker && datePicker.component.item.select && datePicker.component.item.highlight.pick == datePicker.component.item.select.pick) {
+                datePicker.close();
+                $('#order_payment_amount').focus();
+            }  
         }
     };
 })();

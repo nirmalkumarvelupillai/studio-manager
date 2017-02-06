@@ -23,13 +23,18 @@
                         <div class="row">
                             <ul class="horizontal-list right-align">
                                 <li ng-hide="new_order_open">
-                                    <a class="btn-floating green darken-1" ng-click="new_order_open=true">
+                                    <a class="waves-effect waves-circle waves-light btn-floating green darken-1" ng-click="new_order_open=true">
                                         <i class="material-icons">add</i>
                                     </a>
                                 </li>
                                 <li ng-show="new_order_open">
-                                    <a class="btn-floating blue-grey darken-2" ng-click="new_order_open=false">
+                                    <a class="waves-effect waves-circle waves-light btn-floating blue-grey darken-2" ng-click="new_order_open=false">
                                         <i class="material-icons">list</i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="waves-effect waves-circle waves-light btn-floating blue darken-2">
+                                        <i class="material-icons">search</i>
                                     </a>
                                 </li>
                             </ul>
@@ -37,17 +42,31 @@
                         <div id="tab_order_new" ng-class="{'scale-in':new_order_open,'scale-out':!new_order_open}" class="row scale-transition" ng-show="new_order_open">
                             <div ng-form name="order_form">
                                 <div class="row">
-                                    <div input-field class="col s12 m6">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Customer Info</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div input-field class="col s12">
                                         <input name="cust_name" id="cust_name" type="text" class="validate" ng-model="neworder.cust_name" required>
                                         <label for="cust_name" data-error="Missing">Customer Name</label>
                                     </div>
                                     <div input-field class="col s12 m6">
                                         <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
-                                        <label for="cust_mobile">Mobile No</label>
+                                        <label for="cust_mobile">Mobile No 1</label>
+                                    </div>
+                                    <div input-field class="col s12 m6">
+                                        <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
+                                        <label for="cust_mobile">Mobile No 2</label>
                                     </div>
                                     <div input-field class="col s12">
                                         <textarea id="function_address" class="materialize-textarea" ng-model="neworder.cust_address"></textarea>
                                         <label for="textarea1">Address</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Event Info</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -79,26 +98,150 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div input-field class="col s12 m6">
-                                        <i class="material-icons prefix">₹</i>
-                                        <input id="estimated_cost" type="number" class="validate" ng-model="neworder.estimation">
-                                        <label>Estimation</label>
-                                    </div>
-                                    <div input-field class="col s12 m6">
-                                        <i class="material-icons prefix">₹</i>
-                                        <input id="estimated_cost" type="number" ng-model="neworder.advance_paid">
-                                        <label>Advance</label>
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Order Details</h5>
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Payment Info</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="row">
+                                            <div input-field class="col s12 m3">
+                                                <input input-date type="text" id="order_payment_date" class="datepicker" 
+                                                    ng-model="order_payment.date" 
+                                                    container="#container" 
+                                                    select-years="15" 
+                                                    on-set="onOrderPaymentDateChange()" 
+                                                    />
+                                                <label for="order_payment_date">Payment Date</label>
+                                            </div>
+                                            <div input-field class="col s12 m3">
+                                                <i class="material-icons tiny prefix">₹</i>
+                                                <input type="number" id="order_payment_amount" class="validate" ng-model="order_payment.amount" />
+                                                <label for="order_payment_amount"></label>
+                                            </div>
+                                            <div input-field class="col s12 m3">
+                                                <input type="text" id="order_payment_notes" class="validate" ng-model="order_payment.notes" />
+                                                <label for="order_payment_notes">Notes</label>
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <a class="btn btn-small btn-floating waves-effect waves-light green accent-4" id="add_payment_btn" ng-click="addOrderPayment()">
+                                                    <i class="material-icons tiny">add</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s12">
+                                        <h5 class="font-16 grey-text center-align" ng-show="neworder.payments.length == 0">No Payments</h5>
+                                        <table ng-show="neworder.payments.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th data-field="date">Date</th>
+                                                    <th data-field="amount">Amount</th>
+                                                    <th data-field="notes">Notes</th>
+                                                    <th data-field="notes"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="py in neworder.payments">
+                                                    <td>{{py.date | date:'shortDate'}}</td>
+                                                    <td>{{py.amount | currency:'₹'}}</td>
+                                                    <td>{{py.notes}}</td>
+                                                    <td>
+                                                        <a class="btn btn-small btn-floating waves-effect waves-light amber darken-4">
+                                                            <i class="material-icons tiny">edit</i>
+                                                        </a>
+                                                        <a class="btn btn-small btn-floating waves-effect waves-light grey">
+                                                            <i class="material-icons tiny">delete</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Expences</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="row">
+                                            <div input-field class="col s12 m3">
+                                                <input input-date type="text" id="order_payment_date" class="datepicker" 
+                                                    ng-model="order_payment.date" 
+                                                    container="#container" 
+                                                    select-years="15" 
+                                                    on-set="onOrderPaymentDateChange()" 
+                                                    />
+                                                <label for="order_payment_date">Date</label>
+                                            </div>
+                                            <div input-field class="col s12 m3">
+                                                <i class="material-icons tiny prefix">₹</i>
+                                                <input type="number" id="order_payment_amount" class="validate" ng-model="order_payment.amount" />
+                                                <label for="order_payment_amount"></label>
+                                            </div>
+                                            <div input-field class="col s12 m3">
+                                                <input type="text" id="order_payment_notes" class="validate" ng-model="order_payment.notes" />
+                                                <label for="order_payment_notes">For</label>
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <a class="btn btn-small btn-floating waves-effect waves-light green accent-4" id="add_payment_btn" ng-click="addOrderPayment()">
+                                                    <i class="material-icons tiny">add</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s12">
+                                        <h5 class="font-16 grey-text center-align" ng-show="neworder.payments.length == 0">No Payments</h5>
+                                        <table ng-show="neworder.payments.length > 0">
+                                            <thead class="blue darken-2">
+                                                <tr>
+                                                    <th data-field="date">Date</th>
+                                                    <th data-field="amount">Amount</th>
+                                                    <th data-field="notes">Notes</th>
+                                                    <th data-field="notes"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="py in neworder.payments">
+                                                    <td>{{py.date | date:'shortDate'}}</td>
+                                                    <td>{{py.amount | currency:'₹'}}</td>
+                                                    <td>{{py.notes}}</td>
+                                                    <td>
+                                                        <a class="btn btn-small btn-floating waves-effect waves-light amber darken-4">
+                                                            <i class="material-icons tiny">edit</i>
+                                                        </a>
+                                                        <a class="btn btn-small btn-floating waves-effect waves-light grey">
+                                                            <i class="material-icons tiny">delete</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div input-field class="col s6 m3 left">
+                                        <a class="btn waves-effect waves-light blue-grey" id="list_btn" ng-click="new_order_open=false">
+                                            Order List
+                                            <i class="material-icons left">list</i>
+                                        </a>
+                                    </div>
+
                                     <div input-field class="col s6 m3 right">
-                                        <a class="btn waves-effect waves-light" id="book_btn" ng-click="saveOrder()">
+                                        <a class="btn waves-effect waves-light blue-grey" id="book_btn" ng-click="saveOrder()">
                                             Order
                                             <i class="material-icons right">thumb_up</i>
                                         </a>
                                     </div>                            
                                     <div input-field class="col s6 m3 right">
-                                        <a class="btn waves-effect waves-light" id="clear_btn" ng-click="resetOrderForm()">
+                                        <a class="btn waves-effect waves-light blue-grey" id="clear_btn" ng-click="resetOrderForm()">
                                             Cancel
                                             <i class="material-icons left">thumb_down</i>
                                         </a>
@@ -111,6 +254,12 @@
                         <div id="tab_order_list" ng-class="{'scale-in':!new_order_open,'scale-out':new_order_open}"  class="row scale-transition" ng-hide="new_order_open">
                             <div class="col s12">
                                 <div class="row">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5>ORDERS VIEW</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+
                                     <div input-field class="col s12 m3">
                                         <select id="filter_type" ng-model="order_filter.type" ng-change="onOrderFilterChange()" material-select watch>
                                             <option ng-repeat="fst in order_filter_list" >{{fst}}</option>
@@ -210,7 +359,6 @@
                                                             </span>
                                                         </div>
                                                     </div>
-
                                                     <div class="card-action-bar right-align">
                                                         <a ng-if="o.order_status == 'open'" class="hide-on-small-only waves-effect waves-light btn-floating green" ng-click="updateOrderStatus(o,'completed')">
                                                             <i class="material-icons">done</i>
@@ -259,4 +407,21 @@
             </div>
         </div>
     </div>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Studio Manager</h5>
+                    <p class="grey-text text-lighten-4">
+                        App keeps track all your studio activities.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2017 Innovative Solutions
+            </div>
+        </div>
+    </footer>
 </div>
