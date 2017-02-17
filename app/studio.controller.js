@@ -18,13 +18,21 @@
         $scope.order_filter = {};
         $scope.order_filter_list = ['Order Status', 'Date', 'Customer'];
         $scope.order_filter.type = "Order Status";
-        $scope.order_payment = {};
-
 
         $scope.init = init;
         $scope.orderStatusSelectionChange = orderStatusSelectionChange;
         $scope.resetOrderForm = resetOrderForm;
+
+        $scope.addOrderItem = addOrderItem;
         $scope.addOrderPayment = addOrderPayment;
+        $scope.addOrderExpence = addOrderExpence;
+
+        $scope.getOrderCost = getOrderCost;
+        $scope.getOrderDiscount = getOrderDiscount;
+        $scope.getOrderPayments = getOrderPayments;
+        $scope.getOrderBalance = getOrderBalance;
+        $scope.getOrderExpences = getOrderExpences;
+        $scope.getOrderProfit = getOrderProfit;
         $scope.saveOrder = saveOrder;
         $scope.updateOrderStatus = updateOrderStatus;
         $scope.deleteOrder = deleteOrder;
@@ -35,7 +43,15 @@
         $scope.onFunctionDateChange = onFunctionDateChange;
         $scope.onFilterDateChange = onFilterDateChange;
         $scope.onOrderPaymentDateChange = onOrderPaymentDateChange;
+        $scope.onOrderExpenceDateChange = onOrderExpenceDateChange;
         $scope.onPageChange = onPageChange;
+       
+        $scope.$watch(function(){
+            return parseFloat($scope.order_item.amount) * parseInt($scope.order_item.qty);
+        },function(newval,oldval){
+            $scope.order_item.total = Number.isNaN(newval)? 0: newval;
+        });
+       
         // Functions
 
         function init(){
@@ -88,17 +104,100 @@
                 func_venue:'',
                 estimation:'',
                 advance_paid:'',
+                items:[],
                 payments:[],
+                expences:[],
+                order_cost:0,
+                order_discount:0,
+                order_received:0,
+                order_balance:0,
+                order_expence:0,
+                order_profit:0,
                 order_status:'open'
+            };
+            $scope.order_item = {
+                info:'',
+                amount:'',
+                qty:'',
+                total:''
+            }
+            $scope.order_payment = {
+                date:new Date(),
+                amount:'',
+                notes:''
+            };
+            $scope.order_expence = {
+                date:new Date(),
+                amount:'',
+                notes:''
             };
             $scope.sameas_cust_address = false;
         }
 
+        function addOrderItem(){
+            if($scope.order_item && $scope.order_item.info && $scope.order_item.total > 0){
+                $scope.neworder.items.push($scope.order_item);
+                $scope.order_item = {
+                    info:'',
+                    amount:'',
+                    qty:'',
+                    total:''
+                };
+            }
+        }
+
         function addOrderPayment(){
             if($scope.order_payment && $scope.order_payment.date && $scope.order_payment.amount){
+                $scope.order_payment.date = new Date($scope.order_payment.date);
                 $scope.neworder.payments.push($scope.order_payment);
-                $scope.order_payment = {};
+                $scope.order_payment = {
+                    date:new Date(),
+                    amount:'',
+                    notes:''
+                };
             }
+        }
+
+        function addOrderExpence(){
+            if($scope.order_expence && $scope.order_expence.date && $scope.order_expence.amount){
+                $scope.order_expence.date = new Date($scope.order_expence.date);
+                $scope.neworder.expences.push($scope.order_expence);
+                $scope.order_expence = {
+                    date:new Date(),
+                    amount:'',
+                    notes:''
+                };
+            }
+        }
+
+        function getOrderPayments(){
+            return $scope.neworder.payments.reduce(function(sum,obj){
+                return sum + obj.amount;
+            },0)
+        }
+
+        function getOrderExpences(){
+            return $scope.neworder.expences.reduce(function(sum,obj){
+                return sum + obj.amount;
+            },0)
+        }
+
+        function getOrderCost(){
+            return $scope.neworder.items.reduce(function(sum,obj){
+                return sum + obj.total;
+            },0)
+        }
+        
+        function getOrderDiscount(){
+            return 0;
+        }
+
+        function getOrderProfit(){
+            return 0;
+        }
+
+        function getOrderBalance(){
+            return 0;
         }
 
         function saveOrder(){
@@ -217,6 +316,14 @@
             if(datePicker && datePicker.component.item.select && datePicker.component.item.highlight.pick == datePicker.component.item.select.pick) {
                 datePicker.close();
                 $('#order_payment_amount').focus();
+            }  
+        }
+
+        function onOrderExpenceDateChange(){
+            var datePicker = $('#order_expence_date').pickadate('picker');
+            if(datePicker && datePicker.component.item.select && datePicker.component.item.highlight.pick == datePicker.component.item.select.pick) {
+                datePicker.close();
+                $('#order_expence_amount').focus();
             }  
         }
     };

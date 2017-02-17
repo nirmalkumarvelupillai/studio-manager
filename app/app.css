@@ -63,6 +63,73 @@ body{
 	margin-bottom: 5px;
 }
 
+.text-align-center{
+	text-align: center;
+}
+.text-align-left{
+	text-align: left;
+}
+.text-align-right{
+	text-align: right;
+}
+
+
+/*table*/
+
+.table {
+  margin: 0 0 40px 0;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: table;
+}
+@media screen and (max-width: 580px) {
+  .table {
+    display: block;
+  }
+}
+
+.tr {
+  display: table-row;
+  background: #f6f6f6;
+}
+.tr:nth-of-type(odd) {
+  background: #e9e9e9;
+}
+.tr.header {
+  font-weight: 600;
+}
+@media screen and (max-width: 580px) {
+  .tr {
+    padding: 8px 0;
+    display: block;
+  }
+}
+
+.td {
+  padding: 6px 12px;
+  display: table-cell;
+}
+@media screen and (max-width: 580px) {
+  .td {
+    padding: 2px 12px;
+    display: block;
+  }
+}
+
+/*table*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 .font-10{
 	font-size: 10px;
 }
@@ -95,4 +162,8 @@ body{
 
 .font-26{
 	font-size: 26px;
+}
+
+.font-28{
+	font-size: 28px;
 }

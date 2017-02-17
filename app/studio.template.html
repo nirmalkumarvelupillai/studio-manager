@@ -23,18 +23,15 @@
                         <div class="row">
                             <ul class="horizontal-list right-align">
                                 <li ng-hide="new_order_open">
-                                    <a class="waves-effect waves-circle waves-light btn-floating green darken-1" ng-click="new_order_open=true">
-                                        <i class="material-icons">add</i>
+                                    <a class="waves-effect waves-light btn btn-small green darken-1" ng-click="new_order_open=true">
+                                        <i class="material-icons left">add</i>
+                                        NEW ORDER
                                     </a>
                                 </li>
                                 <li ng-show="new_order_open">
-                                    <a class="waves-effect waves-circle waves-light btn-floating blue-grey darken-2" ng-click="new_order_open=false">
-                                        <i class="material-icons">list</i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="waves-effect waves-circle waves-light btn-floating blue darken-2">
-                                        <i class="material-icons">search</i>
+                                    <a class="waves-effect waves-light btn btn-small blue-grey darken-2" ng-click="new_order_open=false">
+                                        <i class="material-icons left">list</i>
+                                        ORDERS LIST
                                     </a>
                                 </li>
                             </ul>
@@ -45,19 +42,17 @@
                                     <div class="col s12 blue-grey white-text">
                                         <h5 class="font-12">Customer Info</h5>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div input-field class="col s12">
                                         <input name="cust_name" id="cust_name" type="text" class="validate" ng-model="neworder.cust_name" required>
                                         <label for="cust_name" data-error="Missing">Customer Name</label>
                                     </div>
                                     <div input-field class="col s12 m6">
                                         <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
-                                        <label for="cust_mobile">Mobile No 1</label>
+                                        <label for="cust_mobile">Mobile No</label>
                                     </div>
                                     <div input-field class="col s12 m6">
-                                        <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_mobile">
-                                        <label for="cust_mobile">Mobile No 2</label>
+                                        <input id="cust_mobile" type="text" class="validate" ng-model="neworder.cust_alternate_mobile">
+                                        <label for="cust_mobile">Alternate Mobile No</label>
                                     </div>
                                     <div input-field class="col s12">
                                         <textarea id="function_address" class="materialize-textarea" ng-model="neworder.cust_address"></textarea>
@@ -68,8 +63,6 @@
                                     <div class="col s12 blue-grey white-text">
                                         <h5 class="font-12">Event Info</h5>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div input-field class="col s12 m6">
                                         <select id="function_type" ng-model="neworder.func_type" material-select watch>
                                             <option value="" disabled selected>Choose..</option>
@@ -101,13 +94,61 @@
                                     <div class="col s12 blue-grey white-text">
                                         <h5 class="font-12">Order Details</h5>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col s12 blue-grey white-text">
-                                        <h5 class="font-12">Payment Info</h5>
+                                    <div class="col s12">
+                                        <div class="row">
+                                            <div input-field class="col s12 m3">
+                                                <input type="text" id="order_item_info" class="validate" ng-model="order_item.info" />
+                                                <label for="order_item_info">Item info</label>
+                                            </div>
+                                            <div input-field class="col s12 m2">
+                                                <input type="number" id="order_item_amount" class="validate" ng-model="order_item.amount" />
+                                                <label for="order_item_amount">Amount (₹)</label>
+                                            </div>
+                                            <div input-field class="col s12 m2">
+                                                <input type="text" id="order_item_qty" class="validate" ng-model="order_item.qty" />
+                                                <label for="order_item_qty">Qty</label>
+                                            </div>
+                                            <div input-field class="col s12 m2">
+                                                <input disabled type="number" id="order_item_total" ng-model="order_item.total" />
+                                                <label for="order_item_total">Total (₹)</label>
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <a class="btn btn-small btn-floating waves-effect waves-light green accent-4" id="add_item_btn" ng-click="addOrderItem()">
+                                                    <i class="material-icons tiny">add</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s12">
+
+                                        <div class="table" ng-show="neworder.items.length > 0">
+                                            <div class="tr header blue darken-1">
+                                                <div class="td">Item</div>
+                                                <div class="td text-align-right">Amount</div>
+                                                <div class="td">Qty</div>
+                                                <div class="td text-align-right">Total</div>
+                                                <div class="td">Action</div>
+                                            </div>
+
+                                            <div class="tr" ng-repeat="it in neworder.items">
+                                                <div class="td">{{it.info}}</div>
+                                                <div class="td text-align-right">{{it.amount | currency:'₹ '}}</div>
+                                                <div class="td text-align-right">{{it.qty}}</div>
+                                                <div class="td text-align-right">{{it.total | currency:'₹ '}}</div>
+                                                <div class="td">
+                                                    <a>
+                                                        <i class="material-icons small">delete</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Customer Payment Info</h5>
+                                    </div>
                                     <div class="col s12">
                                         <div class="row">
                                             <div input-field class="col s12 m3">
@@ -120,9 +161,8 @@
                                                 <label for="order_payment_date">Payment Date</label>
                                             </div>
                                             <div input-field class="col s12 m3">
-                                                <i class="material-icons tiny prefix">₹</i>
                                                 <input type="number" id="order_payment_amount" class="validate" ng-model="order_payment.amount" />
-                                                <label for="order_payment_amount"></label>
+                                                <label for="order_payment_amount">₹</label>
                                             </div>
                                             <div input-field class="col s12 m3">
                                                 <input type="text" id="order_payment_notes" class="validate" ng-model="order_payment.notes" />
@@ -137,116 +177,179 @@
                                     </div>
                                     <div class="col s12">
                                         <h5 class="font-16 grey-text center-align" ng-show="neworder.payments.length == 0">No Payments</h5>
-                                        <table ng-show="neworder.payments.length > 0">
-                                            <thead>
-                                                <tr>
-                                                    <th data-field="date">Date</th>
-                                                    <th data-field="amount">Amount</th>
-                                                    <th data-field="notes">Notes</th>
-                                                    <th data-field="notes"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr ng-repeat="py in neworder.payments">
-                                                    <td>{{py.date | date:'shortDate'}}</td>
-                                                    <td>{{py.amount | currency:'₹'}}</td>
-                                                    <td>{{py.notes}}</td>
-                                                    <td>
-                                                        <a class="btn btn-small btn-floating waves-effect waves-light amber darken-4">
-                                                            <i class="material-icons tiny">edit</i>
-                                                        </a>
-                                                        <a class="btn btn-small btn-floating waves-effect waves-light grey">
-                                                            <i class="material-icons tiny">delete</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        
+                                        <div class="table" ng-show="neworder.payments.length > 0">
+                                            <div class="tr header green lighten-1">
+                                                <div class="td">Date</div>
+                                                <div class="td text-align-right">Amount</div>
+                                                <div class="td">Notes</div>
+                                                <div class="td">Action</div>
+                                            </div>
+
+                                            <div class="tr" ng-repeat="py in neworder.payments">
+                                                <div class="td">{{py.date | date:'longDate'}}</div>
+                                                <div class="td text-align-right">{{py.amount | currency:'₹ '}}</div>
+                                                <div class="td">{{py.notes}}</div>
+                                                <div class="td">
+                                                    <a>
+                                                        <i class="material-icons small">delete</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>    
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 blue-grey white-text">
                                         <h5 class="font-12">Expences</h5>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col s12">
                                         <div class="row">
                                             <div input-field class="col s12 m3">
-                                                <input input-date type="text" id="order_payment_date" class="datepicker" 
-                                                    ng-model="order_payment.date" 
+                                                <input input-date type="text" id="order_expence_date" class="datepicker" 
+                                                    ng-model="order_expence.date" 
                                                     container="#container" 
                                                     select-years="15" 
-                                                    on-set="onOrderPaymentDateChange()" 
+                                                    on-set="onOrderExpenceDateChange()" 
                                                     />
-                                                <label for="order_payment_date">Date</label>
+                                                <label for="order_expence_date">Date</label>
                                             </div>
                                             <div input-field class="col s12 m3">
-                                                <i class="material-icons tiny prefix">₹</i>
-                                                <input type="number" id="order_payment_amount" class="validate" ng-model="order_payment.amount" />
-                                                <label for="order_payment_amount"></label>
+                                                <input type="number" id="order_expence_amount" class="validate" ng-model="order_expence.amount" />
+                                                <label for="order_expence_amount">₹</label>
                                             </div>
                                             <div input-field class="col s12 m3">
-                                                <input type="text" id="order_payment_notes" class="validate" ng-model="order_payment.notes" />
-                                                <label for="order_payment_notes">For</label>
+                                                <input type="text" id="order_expence_notes" class="validate" ng-model="order_expence.notes" />
+                                                <label for="order_expence_notes">Notes</label>
                                             </div>
                                             <div class="input-field col s12 m3">
-                                                <a class="btn btn-small btn-floating waves-effect waves-light green accent-4" id="add_payment_btn" ng-click="addOrderPayment()">
+                                                <a class="btn btn-small btn-floating waves-effect waves-light green accent-4" id="add_expence_btn" ng-click="addOrderExpence()">
                                                     <i class="material-icons tiny">add</i>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col s12">
-                                        <h5 class="font-16 grey-text center-align" ng-show="neworder.payments.length == 0">No Payments</h5>
-                                        <table ng-show="neworder.payments.length > 0">
-                                            <thead class="blue darken-2">
-                                                <tr>
-                                                    <th data-field="date">Date</th>
-                                                    <th data-field="amount">Amount</th>
-                                                    <th data-field="notes">Notes</th>
-                                                    <th data-field="notes"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr ng-repeat="py in neworder.payments">
-                                                    <td>{{py.date | date:'shortDate'}}</td>
-                                                    <td>{{py.amount | currency:'₹'}}</td>
-                                                    <td>{{py.notes}}</td>
-                                                    <td>
-                                                        <a class="btn btn-small btn-floating waves-effect waves-light amber darken-4">
-                                                            <i class="material-icons tiny">edit</i>
-                                                        </a>
-                                                        <a class="btn btn-small btn-floating waves-effect waves-light grey">
-                                                            <i class="material-icons tiny">delete</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <h5 class="font-16 grey-text center-align" ng-show="neworder.expences.length == 0">No Expences</h5>
+                                        <div class="table" ng-show="neworder.expences.length > 0">
+                                            <div class="tr header red accent-2">
+                                                <div class="td">Date</div>
+                                                <div class="td text-align-right">Amount</div>
+                                                <div class="td">Notes</div>
+                                                <div class="td">Action</div>
+                                            </div>
+
+                                            <div class="tr" ng-repeat="exp in neworder.expences">
+                                                <div class="td">{{exp.date | date:'longDate'}}</div>
+                                                <div class="td text-align-right">{{exp.amount | currency:'₹ '}}</div>
+                                                <div class="td">{{exp.notes}}</div>
+                                                <div class="td">
+                                                    <a>
+                                                        <i class="material-icons small">delete</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div input-field class="col s6 m3 left">
-                                        <a class="btn waves-effect waves-light blue-grey" id="list_btn" ng-click="new_order_open=false">
-                                            Order List
-                                            <i class="material-icons left">list</i>
-                                        </a>
-                                    </div>
-
-                                    <div input-field class="col s6 m3 right">
-                                        <a class="btn waves-effect waves-light blue-grey" id="book_btn" ng-click="saveOrder()">
-                                            Order
-                                            <i class="material-icons right">thumb_up</i>
-                                        </a>
-                                    </div>                            
-                                    <div input-field class="col s6 m3 right">
-                                        <a class="btn waves-effect waves-light blue-grey" id="clear_btn" ng-click="resetOrderForm()">
-                                            Cancel
-                                            <i class="material-icons left">thumb_down</i>
-                                        </a>
+                                    <div class="col s12 blue-grey white-text">
+                                        <h5 class="font-12">Account Summary</h5>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="col s12 m6">
+                                            <div class="card-panel blue darken-2 ">
+                                                <span class="white-text left-align">
+                                                    ORDER AMOUNT
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderCost() | currency:'₹ '}}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div class="card-panel purple lighten-2 ">
+                                                <span class="white-text left-align">
+                                                    DISCOUNT
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderDiscount() | currency:'₹ '}}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div class="card-panel green darken-2">
+                                                <span class="white-text left-align">
+                                                    TOTAL RECEIVED
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderPayments() | currency:'₹ '}} 
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div class="card-panel amber darken-2">
+                                                <span class="white-text left-align">
+                                                    BALANCE
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderBalance() | currency:'₹ '}} 
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div class="card-panel red lighten-2">
+                                                <span class="white-text left-align">
+                                                    TOTAL EXPENCES
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderExpences() | currency:'₹ '}} 
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div class="card-panel light-blue darken-3">
+                                                <span class="white-text left-align">
+                                                    PROFIT
+                                                </span>
+                                                <h5 class="white-text center-align font-28">
+                                                    {{getOrderProfit() | currency:'₹ '}} 
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="divider"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 center-align">
+                                        
+                                        <div class="col s6 m3 right">
+                                            <a class="btn waves-effect waves-light green darken-3" id="book_btn" ng-click="saveOrder()">
+                                                Order
+                                                <i class="material-icons right">thumb_up</i>
+                                            </a>
+                                        </div>                            
+
+                                        <div class="col s6 m3 right">
+                                            <a class="btn waves-effect waves-light red darken-3">
+                                                Delete
+                                                <i class="material-icons left">delete</i>
+                                            </a>
+                                        </div>
+
+                                        <div class="col s6 m3 right">
+                                            <a class="btn waves-effect waves-light orange darken-3" id="clear_btn" ng-click="resetOrderForm()">
+                                                Cancel
+                                                <i class="material-icons left">thumb_down</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
 
                         </div>
